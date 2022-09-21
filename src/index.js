@@ -147,6 +147,7 @@ const find = (tree, value) => {
   return found;
 }
 
+
 const levelOrder = (tree, cb) => {
   let discoveredNodes = [];
   if (tree === null) {
@@ -198,7 +199,196 @@ const levelOrder = (tree, cb) => {
 
 }
 
+const preOrderBST = (tree, cb) => {
+  let discoveredNodes = [];
+  // console.log(tree);
+
+  if (tree === null) {
+    return null;
+  }
+
+  // console.log(tree);
+
+  //Recursively traverse tree and push each node to discorved array
+  const preOrder = (node) => {
+    if (!node){
+      return null;
+    }
+    console.log(node.root);
+    discoveredNodes.push(node.root);
+    if (cb) {
+      cb(node.root);
+    }
+    preOrder(node.leftNode);
+    preOrder(node.rightNode);
+  }
+  
+  preOrder(tree);
+
+  return discoveredNodes;
+
+}
+
+const inOrderBST = (tree, cb) => {
+  let discoveredNodes = [];
+
+  if (tree === null) {
+    return null;
+  }
+
+  const inOrder = (node) => {
+    if (!node) {
+      return null;
+    }
+    inOrder(node.leftNode);
+    console.log(node.root);
+    discoveredNodes.push(node.root);
+    if (cb) {
+      cb(node.root);
+    }
+    inOrder(node.rightNode);
+  }
+
+  inOrder(tree);
+
+  // Who would have thought... inOrder... meant INORDER (returns elements in order);
+  return discoveredNodes;
+}
+
+const postOrderBST = (tree, cb) => {
+  let discoveredNodes = [];
+
+  if (tree === null) {
+    return null;
+  }
+
+  const postOrder = (node) => {
+    if (!node) {
+      return null;
+    }
+    postOrder(node.leftNode);
+    postOrder(node.rightNode)
+    console.log(node.root);
+    discoveredNodes.push(node.root);
+    if (cb) {
+      cb(node.root);
+    }
+  }
+
+  postOrder(tree);
+  return discoveredNodes;
+}
+
+const isBalanced = (tree) => {
+  if (!tree) {
+    return null;
+  }
+
+
+  let heightLeft = heightBST(tree.leftNode);
+  let heighRight = heightBST(tree.rightNode);
+
+  // console.log(heightLeft);
+  // console.log(heighRight);
+
+  let heightDiff = heightLeft - heighRight;
+  // if negative # inverse
+  if (heightDiff < 0) {
+    heightDiff *= -1;
+  }
+  // console.log(heightDiff);
+
+  if (heightDiff > 1) {
+    return false;
+  } else {
+    isBalanced(tree.leftNode);
+    isBalanced(tree.rightNode);
+    return true;
+  }
+}
+
+const rebalance = (tree) => {
+  if (!tree) {
+    return null;
+  }
+
+  let orderedArray = inOrderBST(tree);
+
+  return buildTree(orderedArray);
+}
+
 // Helper functions
+const heightBST = (tree) => {
+  if (!tree) {
+    return null;
+  }
+  // initialize height 
+  let height = 0;
+
+  // recursively traverse tree
+  const getHeight = (node, height) => {
+    // base condition
+    if (!node) {
+      return height;
+    } 
+    // add 1 to height
+    height++;
+    // recursively call function passing height
+    let heightLeft = getHeight(node.leftNode, height);
+    let heightRight = getHeight(node.rightNode, height);
+
+    // return larger of numbers from left/right pointers of node
+    if (heightLeft > heightRight) {
+      return heightLeft;
+    } else {
+      return heightRight;
+    }
+    
+  }
+
+  // return the height
+  return getHeight(tree, height);
+}
+
+const depthBST = (tree, value) => {
+  if (!node) {
+    return null;
+  }
+  // initialize height 
+  let depth = 0;
+
+  // recursively traverse tree
+  const getDepth= (node, depth) => {
+    // base condition
+    if (!node) {
+      return null;
+    } 
+
+    // add 1 to depth
+    depth++;
+
+    if (node.root === value) {
+      return depth;
+    }
+
+    // recursively call function passing depth
+    let depthLeft = getDepth(node.leftNode, depth);
+    let depthRight = getDepth(node.rightNode, depth);
+
+
+    // return larger of numbers from left/right pointers of node
+    if (depthLeft) {
+      return depthLeft;
+    } else {
+      return depthRight;
+    }
+    
+  }
+
+  // return the height
+  return getDepth(tree, depth);
+}
+
 const getMin = (tree) => {
   let currentNode = tree;
   if (currentNode.leftNode === null) {
@@ -273,26 +463,105 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
   }
 }
 
-let testArray = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
+// let testArray = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 // console.log(testTree);
 
-let testTree = tree(testArray);
+// let testTree = tree(testArray);
 // console.log(testTree);
 // prettyPrint(testTree);
 
-let insertedTree = insertNode(testTree, 52);
-insertedTree = insertNode(insertedTree, 4269);
-insertedTree = insertNode(insertedTree, 4280);
-insertedTree = insertNode(insertedTree, 5269);
-insertedTree = insertNode(insertedTree, 6269);
+// let insertedTree = insertNode(testTree, 52);
+// insertedTree = insertNode(insertedTree, 4269);
+// insertedTree = insertNode(insertedTree, 4280);
+// insertedTree = insertNode(insertedTree, 5269);
+// insertedTree = insertNode(insertedTree, 6269);
 
 
 // prettyPrint(insertedTree);
 
-let deletedTree = deleteNode(insertedTree, 4280);
+// let deletedTree = deleteNode(insertedTree, 4280);
 
-prettyPrint(deletedTree);
+// prettyPrint(deletedTree);
 
 // console.log(find(deletedTree, 23));
 
-console.log(levelOrder(deletedTree));
+// console.log(levelOrder(deletedTree));
+
+// console.log(preOrderBST(deletedTree));
+// console.log(inOrderBST(deletedTree));
+// console.log(postOrderBST(deletedTree));
+// console.log(heightBST(deletedTree.rightNode.rightNode));
+// console.log(depthBST(deletedTree, 67));
+// console.log(isBalanced(deletedTree));
+// let balancedTree = rebalance(deletedTree);
+
+// prettyPrint(balancedTree);
+
+const driverScript = () => {
+  let array = createRandomArray(13);
+
+  console.log(array);
+
+  let BST = buildTree(array);
+
+  prettyPrint(BST);
+
+  let balanced = isBalanced(BST);
+
+  console.log(balanced);
+
+  if (balanced) {
+    console.log(levelOrder(BST));
+    console.log(preOrderBST(BST));
+    console.log(postOrderBST(BST));
+    console.log(inOrderBST(BST));
+  } else {
+    rebalance(BST);
+    console.log(levelOrder(BST));
+    console.log(preOrderBST(BST));
+    console.log(postOrderBST(BST));
+    console.log(inOrderBST(BST));
+  }
+
+  for (let i = 1; i < 10; i++) {
+    insertNode(BST, (i * 123));
+  }
+
+  prettyPrint(BST);
+
+  balanced = isBalanced(BST);
+
+  console.log(balanced);
+
+  if (!balanced) {
+    BST = rebalance(BST);
+  }
+
+  balanced = isBalanced(BST);
+
+  console.log(balanced);
+  prettyPrint(BST);
+
+  console.log(balanced);
+  console.log(levelOrder(BST));
+  console.log(preOrderBST(BST));
+  console.log(postOrderBST(BST));
+  console.log(inOrderBST(BST));
+
+
+
+}
+
+const createRandomArray = (arraySize, maxNum) => {
+  maxNum = maxNum || 5000;
+  let randomArray = [];
+
+  for (let i = 0; i < arraySize; i++) {
+    let randomNum = Math.floor(Math.random() * maxNum);
+    randomArray.push(randomNum);
+  }
+
+  return randomArray;
+} 
+
+driverScript();
